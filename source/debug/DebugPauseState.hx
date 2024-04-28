@@ -1,4 +1,5 @@
-package;
+// Lit js a pause substate clone
+package debug;
 
 import Controls.Control;
 import flixel.FlxG;
@@ -9,11 +10,11 @@ import flixel.input.keyboard.FlxKey;
 import flixel.system.FlxSound;
 import flixel.util.FlxColor;
 
-class PauseSubState extends MusicBeatSubstate
+class DebugPauseState extends MusicBeatSubstate
 {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
-	var menuItems:Array<String> = ['Resume', 'Restart Song', 'Exit to menu'];
+	var menuItems:Array<String> = ['Speed Up Song', 'Slow Down Song', 'Set Song To Normal', 'Close'];
 	var curSelected:Int = 0;
 
 	var pauseMusic:FlxSound;
@@ -75,13 +76,14 @@ class PauseSubState extends MusicBeatSubstate
 
 			switch (daSelected)
 			{
-				case "Resume":
+				case "Speed Up Song":
+					PlayState.timeScale *= 2;
+				case "Slow Down Song":
+					PlayState.timeScale /= 2;
+                case "Set Song To Normal":
+                    PlayState.timeScale = 1;    
+				case "Close":
 					close();
-				case "Restart Song":
-					FlxG.resetState();
-				case "Exit to menu":
-					PlayState.timeScale = 1;   
-					FlxG.switchState(new MainMenuState());
 			}
 		}
 
