@@ -69,49 +69,16 @@ class Character extends FlxSprite
 				addOffset("singRIGHT", 0, 27);
 				addOffset("singLEFT", -10, 10);
 				addOffset("singDOWN", 0, -30);
-			case 'spooky':
-				tex = FlxAtlasFrames.fromSparrow(AssetPaths.spooky_kids_assets__png, AssetPaths.spooky_kids_assets__xml);
-				frames = tex;
-				animation.addByPrefix('singUP', 'spooky UP NOTE', 24, false);
-				animation.addByPrefix('singDOWN', 'spooky DOWN note', 24, false);
-				animation.addByPrefix('singLEFT', 'note sing left', 24, false);
-				animation.addByPrefix('singRIGHT', 'spooky sing right', 24, false);
-				animation.addByIndices('danceLeft', 'spooky dance idle', [0, 2, 6], "", 12, false);
-				animation.addByIndices('danceRight', 'spooky dance idle', [8, 10, 12, 14], "", 12, false);
 
-				addOffset('danceLeft');
-				addOffset('danceRight');
-
-				addOffset("singUP", -20, 26);
-				addOffset("singRIGHT", -130, -14);
-				addOffset("singLEFT", 130, -10);
-				addOffset("singDOWN", -50, -130);
-
-				playAnim('danceRight');
-			case 'monster':
-				tex = FlxAtlasFrames.fromSparrow(AssetPaths.Monster_Assets__png, AssetPaths.Monster_Assets__xml);
-				frames = tex;
-				animation.addByPrefix('idle', 'monster idle', 24);
-				animation.addByPrefix('singUP', 'monster up note', 24, false);
-				animation.addByPrefix('singDOWN', 'monster down', 24, false);
-				animation.addByPrefix('singLEFT', 'Monster left note', 24, false);
-				animation.addByPrefix('singRIGHT', 'Monster Right note', 24, false);
-
-				addOffset('idle');
-				addOffset("singUP", -20, 50);
-				addOffset("singRIGHT", -51);
-				addOffset("singLEFT", -30);
-				addOffset("singDOWN", -30, -40);
-				playAnim('idle');
 			case 'tankman':
 				// TANKMAN ANIMATION LOADING CODE
 				tex = FlxAtlasFrames.fromSparrow(AssetPaths.tankmanCaptain__png, AssetPaths.tankmanCaptain__xml);
 				frames = tex;
 				animation.addByPrefix('idle', 'Tankman Idle Dance instance', 24);
 				animation.addByPrefix('singUP', 'Tankman UP note instance', 24);
-				animation.addByPrefix('singRIGHT', 'Tankman Right Note instance', 24);
+				animation.addByPrefix('singLEFT', 'Tankman Right Note instance', 24); // SWAPPED WIT RIGHT
 				animation.addByPrefix('singDOWN', 'Tankman DOWN note instance', 24);
-				animation.addByPrefix('singLEFT', 'Tankman Note Left instance', 24);
+				animation.addByPrefix('singRIGHT', 'Tankman Note Left instance', 24); // SWAPPED WIT LEFT
 				animation.addByPrefix('singUPalt', 'TANKMAN UGH instance', 24);
 				animation.addByPrefix('singDOWNalt', 'PRETTY GOOD tankman instance', 24);
 				playAnim('idle');
@@ -123,6 +90,7 @@ class Character extends FlxSprite
 				addOffset("singDOWN", 0, -243);
 				addOffset("singUPalt", 0, -243);
 				addOffset("singDOWNalt", 0, -243);
+				flipX = true;
 				
 			case 'picoSpeaker':
 				// GIRLFRIEND CODE

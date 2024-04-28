@@ -29,6 +29,7 @@ import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
 import haxe.Json;
 import lime.utils.Assets;
+import LoopState;
 
 using StringTools;
 
@@ -92,6 +93,11 @@ class PlayState extends MusicBeatState
 	// Funk 7 Addons
 	public static var Misses:Int = 0;
 	public static var timeScale = FlxG.timeScale;
+	//var accuracy:Int = 0.00;
+	private var allNotes:Array<Note> = [];
+	private var loopA:Float = 0;
+	private var loopB:Float;
+	private var loopState:LoopState = NONE;
 
 	override public function create()
 	{
@@ -386,6 +392,7 @@ class PlayState extends MusicBeatState
 		FlxG.sound.playMusic("assets/music/" + SONG.song + "_Inst" + TitleState.soundExt, 1, false);
 		FlxG.sound.music.onComplete = endSong;
 		vocals.play();
+		loopB = FlxG.sound.music.length - 100;
 	}
 
 	var debugNum:Int = 0;
@@ -482,7 +489,62 @@ class PlayState extends MusicBeatState
 
 		unspawnNotes.sort(sortByShit);
 
+		allNotes = deepCopyNotes(unspawnNotes);
 		generatedMusic = true;
+	}
+
+	function deepCopyNotes(noteArray:Array<Note>,?startingpoint:Float = 0):Array<Note>
+	{
+		var noteRef:Note = null;
+		var newNoteArray:Array<Note> = [];
+
+		for(note in noteArray){
+			if(note.strumTime > startingpoint)
+			{
+				noteRef = newNoteArray.length > 0 ? newNoteArray[newNoteArray.length - 1] : null;
+				var deepCopy:Note = new Note(note.strumTime,note.noteData,noteRef,note.isSustainNote);
+				deepCopy.mustPress = note.mustPress;
+				deepCopy.x = note.x;
+				newNoteArray.push(deepCopy);
+			}
+		}
+		return newNoteArray;
+	}
+
+	function loopHandler(abLoop:Bool):LoopState
+	{
+		FlxG.log.add("Made it" + abLoop);
+		if(abLoop){
+			switch(loopState){				
+				case REPEAT | NONE:
+					if(!startingSong)
+						loopA = Conductor.songPosition;
+					else
+						loopA = 0;
+					loopState = ANODE;
+					FlxG.log.add("Setting A Node");
+				case ANODE:
+					loopB = Conductor.songPosition;
+					loopState = ABREPEAT;
+					FlxG.log.add("Setting B Node");
+				case ABREPEAT:
+					loopState = NONE;
+					FlxG.log.add("Removing Nodes");				
+			}
+		}
+		else{
+			switch(loopState){
+				case NONE | ABREPEAT:
+					loopA = 0;
+					loopB = FlxG.sound.music.length - 100;
+					loopState = REPEAT;
+					FlxG.log.add("Looping Entire Song");
+				case REPEAT | ANODE:
+					loopState = NONE;
+					FlxG.log.add("No longer Looping");
+			}
+		}
+		return loopState;
 	}
 
 	function sortByShit(Obj1:Note, Obj2:Note):Int
@@ -609,7 +671,7 @@ class PlayState extends MusicBeatState
 		// trace("SONG POS: " + Conductor.songPosition);
 		// FlxG.sound.music.pitch = 2;
 
-		scoreTxt.text = "Score:" + songScore + "| Misses:" + Misses;
+		scoreTxt.text = "Score:" + songScore + " | Misses:" + Misses;
 
 		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
 		{
@@ -617,7 +679,7 @@ class PlayState extends MusicBeatState
 			persistentDraw = true;
 			paused = true;
 
-			openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+			openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y,loopHandler.bind(_),loopState));
 		}
 
 		if (FlxG.keys.justPressed.SHIFT && startedCountdown && canPause)
@@ -625,7 +687,7 @@ class PlayState extends MusicBeatState
 			persistentUpdate = false;
 			persistentDraw = true;
 			paused = true;
-			openSubState(new debug.DebugPauseState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+			openSubState(new debug.DebugPauseState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y,loopHandler.bind(_),loopState));
 		}
 
 		if (FlxG.keys.justPressed.SEVEN)
@@ -661,6 +723,15 @@ class PlayState extends MusicBeatState
 			if (startedCountdown)
 			{
 				Conductor.songPosition += FlxG.elapsed * 1000;
+
+				FlxG.watch.addQuick("songPosition", Conductor.songPosition);
+				if(loopState != NONE && Conductor.songPosition >= loopB)
+				{
+					Conductor.songPosition = loopA;
+					FlxG.sound.music.time = loopA;
+					unspawnNotes = deepCopyNotes(allNotes,loopA);
+				}
+
 				if (Conductor.songPosition >= 0)
 					startSong();
 			}
@@ -1166,10 +1237,6 @@ class PlayState extends MusicBeatState
 					}
 				}
 			}
-			else
-			{
-				badNoteCheck();
-			}
 		}
 
 		if ((up || right || down || left) && generatedMusic)
@@ -1200,14 +1267,6 @@ class PlayState extends MusicBeatState
 				}
 			});
 		}
-
-//		if (upR || leftR || rightR || downR)
-//		{
-//			if (boyfriend.animation.curAnim.name.startsWith('sing'))
-//			{
-//				boyfriend.playAnim('idle');
-//			}
-//		}
 
 		playerStrums.forEach(function(spr:FlxSprite)
 		{
@@ -1277,6 +1336,7 @@ class PlayState extends MusicBeatState
 	{
 		health -= 0.04;
 		Misses += 1;
+		//accuracy -= 0.50;
 		if (combo > 5 && gf.animOffsets.exists('sad'))
 			{
 			gf.playAnim('sad');
@@ -1346,8 +1406,6 @@ class PlayState extends MusicBeatState
 		trace(note.noteData + ' note check here ' + keyP);
 		if (keyP)
 			goodNoteHit(note);
-		else
-			badNoteCheck();
 	}
 
 	function goodNoteHit(note:Note):Void
@@ -1361,9 +1419,15 @@ class PlayState extends MusicBeatState
 			}
 
 			if (note.noteData >= 0)
+			{
 				health += 0.023;
+				//accuracy += 0.25;
+			}	
 			else
+			{
 				health += 0.010;
+				//accuracy += 0.15;
+			}	
 
 			switch (note.noteData)
 			{

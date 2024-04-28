@@ -14,12 +14,14 @@ class DebugPauseState extends MusicBeatSubstate
 {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
-	var menuItems:Array<String> = ['Speed Up Song', 'Slow Down Song', 'Set Song To Normal', 'Close'];
+	var menuItems:Array<String> = ['Speed Up Song', 'Slow Down Song', 'Set Song To Normal', 'Loop Song', 'Close'];
 	var curSelected:Int = 0;
 
 	var pauseMusic:FlxSound;
+	var loopCallback:Bool->Void;
+	var loopState:LoopState;
 
-	public function new(x:Float, y:Float)
+	public function new(x:Float, y:Float,loopCallback:Bool->Void,loopState:LoopState)
 	{
 		super();
 
@@ -33,6 +35,10 @@ class DebugPauseState extends MusicBeatSubstate
 		bg.alpha = 0.6;
 		bg.scrollFactor.set();
 		add(bg);
+
+		this.loopCallback = loopCallback;
+		this.loopState = loopState;
+		updateLoopState();
 
 		grpMenuShit = new FlxTypedGroup<Alphabet>();
 		add(grpMenuShit);
@@ -82,6 +88,8 @@ class DebugPauseState extends MusicBeatSubstate
 					PlayState.timeScale /= 2;
                 case "Set Song To Normal":
                     PlayState.timeScale = 1;    
+                case "Loop Song":
+                    loopCallback(false);
 				case "Close":
 					close();
 			}
@@ -91,6 +99,24 @@ class DebugPauseState extends MusicBeatSubstate
 		{
 			// for reference later!
 			// PlayerSettings.player1.controls.replaceBinding(Control.LEFT, Keys, FlxKey.J, null);
+		}
+	}
+
+	function updateLoopState(){
+		FlxG.log.add(loopState);
+		switch(loopState){
+			case NONE:
+				menuItems[2] = 'Loop Song';
+				menuItems[3] = 'AB Repeat';
+			case REPEAT:
+				menuItems[2] = 'Stop Repeating';
+				menuItems[3] = 'AB Repeat';
+			case ANODE:
+				menuItems[2] = 'Cancel AB repeat';
+				menuItems[3] = 'Confirm B Node';
+			case ABREPEAT:
+				menuItems[2] = 'Loop Song';
+				menuItems[3] = 'Stop Repeating';
 		}
 	}
 

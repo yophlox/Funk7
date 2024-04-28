@@ -78,6 +78,8 @@ class ChartingState extends MusicBeatState
 
 	override function create()
 	{
+		FlxG.mouse.visible = true;
+
 		gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE * 8, GRID_SIZE * 16);
 		add(gridBG);
 
@@ -182,7 +184,7 @@ class ChartingState extends MusicBeatState
 		stepperBPM.value = Conductor.bpm;
 		stepperBPM.name = 'song_bpm';
 
-		var characters:Array<String> = ["bf", 'dad', 'gf', 'spooky', 'monster'];
+		var characters:Array<String> = ["bf", 'dad', 'gf', 'tankman', 'picoSpeaker'];
 
 		var player1DropDown = new FlxUIDropDownMenu(10, 100, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true), function(character:String)
 		{
