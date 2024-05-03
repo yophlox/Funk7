@@ -32,6 +32,7 @@ import openfl.media.Sound;
 import openfl.net.FileReference;
 import openfl.utils.ByteArray;
 import game.states.PlayState;
+import game.states.TitleState;
 
 using StringTools;
 
