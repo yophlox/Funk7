@@ -31,6 +31,7 @@ import openfl.events.IOErrorEvent;
 import openfl.media.Sound;
 import openfl.net.FileReference;
 import openfl.utils.ByteArray;
+import game.states.PlayState;
 
 using StringTools;
 
@@ -450,7 +451,7 @@ class ChartingState extends MusicBeatState
 			PlayState.SONG = _song;
 			FlxG.sound.music.stop();
 			vocals.stop();
-			FlxG.switchState(new game.states.PlayState());
+			FlxG.switchState(new PlayState());
 		}
 
 		if (!typingShit.hasFocus)

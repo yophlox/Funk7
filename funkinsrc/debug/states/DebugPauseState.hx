@@ -1,5 +1,5 @@
 // Lit js a pause substate clone
-package debug;
+package debug.states;
 
 import Controls.Control;
 import flixel.FlxG;
@@ -10,6 +10,7 @@ import flixel.input.keyboard.FlxKey;
 import flixel.system.FlxSound;
 import flixel.util.FlxColor;
 import game.states.LoopState;
+import game.states.PlayState;
 
 class DebugPauseState extends MusicBeatSubstate
 {
@@ -26,7 +27,7 @@ class DebugPauseState extends MusicBeatSubstate
 	{
 		super();
 
-		pauseMusic = new FlxSound().loadEmbedded('assets/music/breakfast' + TitleState.soundExt, true, true);
+		pauseMusic = new FlxSound().loadEmbedded('assets/music/breakfast' + game.states.TitleState.soundExt, true, true);
 		pauseMusic.volume = 0;
 		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
 
@@ -94,12 +95,6 @@ class DebugPauseState extends MusicBeatSubstate
 				case "Close":
 					close();
 			}
-		}
-
-		if (FlxG.keys.justPressed.J)
-		{
-			// for reference later!
-			// PlayerSettings.player1.controls.replaceBinding(Control.LEFT, Keys, FlxKey.J, null);
 		}
 	}
 
