@@ -1,4 +1,4 @@
-package game.states;
+package debug.states;
 
 import Section.SwagSection;
 import Song.SwagSong;

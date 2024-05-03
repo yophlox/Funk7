@@ -26,7 +26,7 @@ class MusicBeatSubstate extends FlxSubState
 	override function create()
 	{
 		#if (!web)
-		TitleState.soundExt = '.ogg';
+		game.states.TitleState.soundExt = '.ogg';
 		#end
 
 		super.create();
