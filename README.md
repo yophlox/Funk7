@@ -2,13 +2,13 @@
 
 # Funk 7 Engine
 
-Yeahh I'm making an engine out of this lmao
+* A Friday Night Funkin' Engine that runs on Funkin' v0.2.1
 
-og repo/branch: https://github.com/SnesFX/Funkin-Week7-0.2.1/tree/Funk-7-Engine
+* Original repo/branch: https://github.com/SnesFX/Funkin-Week7-0.2.1/tree/Funk-7-Engine
 
-# W.i.p. Additions
+# Planned Additions
 
- ° Ghost Tapping (going to be in a seperate branch)
+ ° Ghost Tapping - DONE
  
  
  ° Fully Functional Pause Menu  - DONE
@@ -17,7 +17,13 @@ og repo/branch: https://github.com/SnesFX/Funkin-Week7-0.2.1/tree/Funk-7-Engine
  ° Options Menu - Crashes game at the moment (tested on html5 builds)
  
  
- ° Week 7 Stuff - Just gotta fix offsets and alt animations
+ ° Week 7 Stuff - DONE 
  
 
  ° Modding Compatibility - w.i.p.
+
+# Credits
+
+* TyDotCS - Engine
+
+* Funkin' Crew - Original Game
