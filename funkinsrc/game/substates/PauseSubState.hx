@@ -1,4 +1,4 @@
-package;
+package game.substates;
 
 import Controls.Control;
 import flixel.FlxG;
@@ -22,7 +22,7 @@ class PauseSubState extends MusicBeatSubstate
 	{
 		super();
 
-		pauseMusic = new FlxSound().loadEmbedded('assets/music/breakfast' + TitleState.soundExt, true, true);
+		pauseMusic = new FlxSound().loadEmbedded('assets/music/breakfast' + game.states.TitleState.soundExt, true, true);
 		pauseMusic.volume = 0;
 		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
 
@@ -80,8 +80,8 @@ class PauseSubState extends MusicBeatSubstate
 				case "Restart Song":
 					FlxG.resetState();
 				case "Exit to menu":
-					PlayState.timeScale = 1;   
-					FlxG.switchState(new MainMenuState());
+					game.states.PlayState.timeScale = 1;   
+					FlxG.switchState(new game.states.MainMenuState());
 			}
 		}
 

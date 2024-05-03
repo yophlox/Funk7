@@ -1,4 +1,4 @@
-package;
+package game.states;
 
 import Section.SwagSection;
 import Song.SwagSong;
@@ -679,7 +679,7 @@ class PlayState extends MusicBeatState
 			persistentDraw = true;
 			paused = true;
 
-			openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y,loopHandler.bind(_),loopState));
+			openSubState(new game.substates.PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y,loopHandler.bind(_),loopState));
 		}
 
 		if (FlxG.keys.justPressed.SHIFT && startedCountdown && canPause)
@@ -687,12 +687,12 @@ class PlayState extends MusicBeatState
 			persistentUpdate = false;
 			persistentDraw = true;
 			paused = true;
-			openSubState(new debug.DebugPauseState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y,loopHandler.bind(_),loopState));
+			openSubState(new debug.states.DebugPauseState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y,loopHandler.bind(_),loopState));
 		}
 
 		if (FlxG.keys.justPressed.SEVEN)
 		{
-			FlxG.switchState(new ChartingState());
+			FlxG.switchState(new debug.states.ChartingState());
 		}
 
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
@@ -811,7 +811,7 @@ class PlayState extends MusicBeatState
 				case 163:
 					// FlxG.sound.music.stop();
 					// curLevel = 'Bopeebo';
-					// FlxG.switchState(new TitleState());
+					// FlxG.switchState(new game.states.TitleState());
 			}
 		}
 
@@ -822,7 +822,7 @@ class PlayState extends MusicBeatState
 				case 127:
 					// FlxG.sound.music.stop();
 					// curLevel = 'Fresh';
-					// FlxG.switchState(new PlayState());
+					// FlxG.switchState(new game.states.PlayState());
 			}
 		}
 		// better streaming of shit
@@ -838,7 +838,7 @@ class PlayState extends MusicBeatState
 			vocals.stop();
 			FlxG.sound.music.stop();
 
-			openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+			openSubState(new game.substates.GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 
 			// FlxG.switchState(new GameOverState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 		}
@@ -1016,7 +1016,7 @@ class PlayState extends MusicBeatState
 				FlxG.sound.playMusic('assets/music/freakyMenu' + TitleState.soundExt);
 
 				PlayState.timeScale = 1;
-				FlxG.switchState(new StoryMenuState());
+				FlxG.switchState(new game.states.StoryMenuState());
 
 				StoryMenuState.weekUnlocked[2] = true;
 
@@ -1041,12 +1041,12 @@ class PlayState extends MusicBeatState
 				trace(PlayState.storyPlaylist[0].toLowerCase() + difficulty);
 
 				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + difficulty, PlayState.storyPlaylist[0]);
-				FlxG.switchState(new PlayState());
+				FlxG.switchState(new game.states.PlayState());
 			}
 		}
 		else
 		{
-			FlxG.switchState(new FreeplayState());
+			FlxG.switchState(new game.states.FreeplayState());
 		}
 	}
 

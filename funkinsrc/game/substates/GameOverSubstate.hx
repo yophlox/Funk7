@@ -1,4 +1,4 @@
-package;
+package game.substates;
 
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -26,7 +26,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		camFollow = new FlxObject(bf.getGraphicMidpoint().x, bf.getGraphicMidpoint().y, 1, 1);
 		add(camFollow);
 
-		FlxG.sound.play('assets/sounds/fnf_loss_sfx' + TitleState.soundExt);
+		FlxG.sound.play('assets/sounds/fnf_loss_sfx' + game.states.TitleState.soundExt);
 		Conductor.changeBPM(100);
 
 		// FlxG.camera.followLerp = 1;
@@ -50,10 +50,10 @@ class GameOverSubstate extends MusicBeatSubstate
 		{
 			FlxG.sound.music.stop();
 
-			if (PlayState.isStoryMode)
-				FlxG.switchState(new StoryMenuState());
+			if (game.states.PlayState.isStoryMode)
+				FlxG.switchState(new game.states.StoryMenuState());
 			else
-				FlxG.switchState(new FreeplayState());
+				FlxG.switchState(new game.states.FreeplayState());
 		}
 
 		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.curFrame == 12)
@@ -63,7 +63,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.finished)
 		{
-			FlxG.sound.playMusic('assets/music/gameOver' + TitleState.soundExt);
+			FlxG.sound.playMusic('assets/music/gameOver' + game.states.TitleState.soundExt);
 		}
 
 		if (FlxG.sound.music.playing)
@@ -88,12 +88,12 @@ class GameOverSubstate extends MusicBeatSubstate
 			isEnding = true;
 			bf.playAnim('deathConfirm', true);
 			FlxG.sound.music.stop();
-			FlxG.sound.play('assets/music/gameOverEnd' + TitleState.soundExt);
+			FlxG.sound.play('assets/music/gameOverEnd' + game.states.TitleState.soundExt);
 			new FlxTimer().start(0.7, function(tmr:FlxTimer)
 			{
 				FlxG.camera.fade(FlxColor.BLACK, 2, false, function()
 				{
-					FlxG.switchState(new PlayState());
+					FlxG.switchState(new game.states.PlayState());
 				});
 			});
 		}

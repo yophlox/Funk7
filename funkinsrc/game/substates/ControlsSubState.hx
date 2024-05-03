@@ -1,4 +1,4 @@
-package;
+package game.substates;
 
 import flixel.FlxSubState;
 

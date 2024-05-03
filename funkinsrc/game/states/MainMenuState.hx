@@ -1,4 +1,4 @@
-package;
+package game.states;
 
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -102,7 +102,7 @@ class MainMenuState extends MusicBeatState
 
 			if (controls.BACK)
 			{
-				FlxG.switchState(new TitleState());
+				FlxG.switchState(new game.states.TitleState());
 			}
 
 			if (controls.ACCEPT)
@@ -139,9 +139,9 @@ class MainMenuState extends MusicBeatState
 								switch (daChoice)
 								{
 									case 'freeplay':
-										FlxG.switchState(new FreeplayState());
+										FlxG.switchState(new game.states.FreeplayState());
 									case 'options':
-										FlxG.switchState(new OptionsMenu());
+										FlxG.switchState(new game.states.OptionsMenu());
 								}
 							});
 						}

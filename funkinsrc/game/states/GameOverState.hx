@@ -1,4 +1,4 @@
-package;
+package game.states;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -74,7 +74,7 @@ class GameOverState extends FlxTransitionableState
 			FlxG.sound.music.fadeOut(0.5, 0, function(twn:FlxTween)
 			{
 				FlxG.sound.music.stop();
-				FlxG.switchState(new PlayState());
+				FlxG.switchState(new game.states.PlayState());
 			});
 		}
 		super.update(elapsed);

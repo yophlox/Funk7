@@ -1,4 +1,4 @@
-package;
+package game.states;
 
 enum LoopState{
     NONE; // The song is not Looping

@@ -1,4 +1,4 @@
-package;
+package game.states;
 
 import flash.text.TextField;
 import flixel.FlxG;
@@ -135,7 +135,7 @@ class FreeplayState extends MusicBeatState
 
 		if (controls.BACK)
 		{
-			FlxG.switchState(new MainMenuState());
+			FlxG.switchState(new game.states.MainMenuState());
 		}
 
 		if (accepted)
@@ -144,7 +144,7 @@ class FreeplayState extends MusicBeatState
 
 			PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].toLowerCase());
 			PlayState.isStoryMode = false;
-			FlxG.switchState(new PlayState());
+			FlxG.switchState(new game.states.PlayState());
 			if (FlxG.sound.music != null)
 				FlxG.sound.music.stop();
 		}

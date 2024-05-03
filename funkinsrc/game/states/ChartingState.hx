@@ -1,4 +1,4 @@
-package;
+package game.states;
 
 import Section.SwagSection;
 import Song.SwagSong;
@@ -450,7 +450,7 @@ class ChartingState extends MusicBeatState
 			PlayState.SONG = _song;
 			FlxG.sound.music.stop();
 			vocals.stop();
-			FlxG.switchState(new PlayState());
+			FlxG.switchState(new game.states.PlayState());
 		}
 
 		if (!typingShit.hasFocus)
