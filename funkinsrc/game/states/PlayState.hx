@@ -29,7 +29,7 @@ import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
 import haxe.Json;
 import lime.utils.Assets;
-import LoopState;
+import game.states.LoopState;
 
 using StringTools;
 
