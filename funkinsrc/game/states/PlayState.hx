@@ -85,13 +85,13 @@ class PlayState extends MusicBeatState
 	var isHalloween:Bool = false;
 
 	var talking:Bool = true;
-	var songScore:Int = 0;
+	public var songScore:Int = 0;
 	var scoreTxt:FlxText;
 
-	public static var campaignScore:Int = 0;
+	public static var storyScore:Int = 0;
 
 	// Funk 7 Addons
-	public static var Misses:Int = 0;
+	public static var misses:Int = 0;
 	public static var timeScale = FlxG.timeScale;
 	//var accuracy:Int = 0.00;
 	private var allNotes:Array<Note> = [];
@@ -101,6 +101,7 @@ class PlayState extends MusicBeatState
 
 	override public function create()
 	{
+		instance = this;
 		// var gameCam:FlxCamera = FlxG.camera;
 		camGame = new FlxCamera();
 		camHUD = new FlxCamera();
@@ -483,8 +484,6 @@ class PlayState extends MusicBeatState
 			}
 			daBeats += 1;
 		}
-
-		trace(unspawnNotes.length);
 		// playerCounter += 1;
 
 		unspawnNotes.sort(sortByShit);
@@ -660,6 +659,19 @@ class PlayState extends MusicBeatState
 	private var paused:Bool = false;
 	var startedCountdown:Bool = false;
 	var canPause:Bool = true;
+	
+	// RESULTS SHIT
+	public static var sicks:Int = 0;
+	public static var goods:Int = 0;
+	public static var bads:Int = 0;
+	public static var shits:Int = 0;
+	public static var storyMisses:Int = 0;
+	public static var storySicks:Int = 0;
+	public static var storyGoods:Int = 0;
+	public static var storyBads:Int = 0;
+	public static var storyShits:Int = 0;
+	var daRating:String = ""; // Moved up here so the shii can work
+	public static var instance:PlayState = null;
 
 	override public function update(elapsed:Float)
 	{
@@ -671,7 +683,7 @@ class PlayState extends MusicBeatState
 		// trace("SONG POS: " + Conductor.songPosition);
 		// FlxG.sound.music.pitch = 2;
 
-		scoreTxt.text = "Score:" + songScore + " | Misses:" + Misses;
+		scoreTxt.text = "Score:" + songScore + " | Misses:" + misses;
 
 		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
 		{
@@ -693,6 +705,12 @@ class PlayState extends MusicBeatState
 		if (FlxG.keys.justPressed.SEVEN)
 		{
 			FlxG.switchState(new debug.states.ChartingState());
+		}
+		if (FlxG.keys.justPressed.EIGHT)
+		{
+			trace("Switching to wip ResultsState?");
+			//openSubState(new game.substates.ResultsState());
+			FlxG.switchState(new game.states.Results());
 		}
 
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
@@ -1007,7 +1025,7 @@ class PlayState extends MusicBeatState
 
 		if (isStoryMode)
 		{
-			campaignScore += songScore;
+			storyScore += songScore;
 
 			storyPlaylist.remove(storyPlaylist[0]);
 
@@ -1016,12 +1034,13 @@ class PlayState extends MusicBeatState
 				FlxG.sound.playMusic('assets/music/freakyMenu' + TitleState.soundExt);
 
 				PlayState.timeScale = 1;
-				FlxG.switchState(new game.states.StoryMenuState());
+				//openSubState(new game.substates.ResultsState());
+				FlxG.switchState(new game.states.Results());
 
 				StoryMenuState.weekUnlocked[2] = true;
 
 				//NGio.unlockMedal(60961);
-				//Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
+				//Highscore.saveWeekScore(storyWeek, storyScore, storyDifficulty);
 
 				FlxG.save.data.weekUnlocked = StoryMenuState.weekUnlocked;
 				FlxG.save.flush();
@@ -1046,7 +1065,8 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			FlxG.switchState(new game.states.FreeplayState());
+			FlxG.switchState(new game.states.Results());
+			//openSubState(new game.substates.ResultsState());
 		}
 	}
 
@@ -1068,33 +1088,53 @@ class PlayState extends MusicBeatState
 		var rating:FlxSprite = new FlxSprite();
 		var score:Int = 350;
 
-		var daRating:String = "sick";
-
+		// ADDED STUFF FOR RESULTS SCREEN
 		if (noteDiff > Conductor.safeZoneOffset * 0.9)
 		{
 			daRating = 'shit';
 			score = 50;
+			shits += 1;
+			if (isStoryMode)
+			{
+				storyScore += Math.round(songScore);
+				storyShits += shits;
+			}	
 		}
 		else if (noteDiff > Conductor.safeZoneOffset * 0.75)
 		{
 			daRating = 'bad';
 			score = 100;
+			bads += 1;
+			if (isStoryMode)
+			{
+				storyScore += Math.round(songScore);
+				storyBads += bads;
+			}	
 		}
 		else if (noteDiff > Conductor.safeZoneOffset * 0.2)
 		{
 			daRating = 'good';
 			score = 200;
+			goods += 1;
+			if (isStoryMode)
+			{
+				storyScore += Math.round(songScore);
+				storyGoods += goods;
+			}	
+		}
+		else if (noteDiff > Conductor.safeZoneOffset * 0.1)
+		{
+			daRating = 'sick';
+			score = 300;
+			sicks += 1;
+			if (isStoryMode)
+			{
+				storyScore += Math.round(songScore);
+				storySicks += sicks;
+			}	
 		}
 
 		songScore += score;
-
-		/* if (combo > 60)
-				daRating = 'sick';
-			else if (combo > 12)
-				daRating = 'good'
-			else if (combo > 4)
-				daRating = 'bad';
-		 */
 		rating.loadGraphic('assets/images/' + daRating + ".png");
 		rating.screenCenter();
 		rating.x = coolText.x - 40;
@@ -1205,7 +1245,6 @@ class PlayState extends MusicBeatState
 				if (daNote.canBeHit && daNote.mustPress && !daNote.tooLate)
 				{
 					possibleNotes.push(daNote);
-					trace('NOTE-' + daNote.strumTime + ' ADDED');
 				}
 			});
 
@@ -1236,7 +1275,7 @@ class PlayState extends MusicBeatState
 						daNote.destroy();
 					}
 				}
-			}
+			}	
 		}
 
 		if ((up || right || down || left) && generatedMusic)
@@ -1267,6 +1306,11 @@ class PlayState extends MusicBeatState
 				}
 			});
 		}
+
+		if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
+		{
+			boyfriend.playAnim('idle');
+		}	
 
 		playerStrums.forEach(function(spr:FlxSprite)
 		{
@@ -1335,7 +1379,14 @@ class PlayState extends MusicBeatState
 	function noteMiss(direction:Int = 1):Void
 	{
 		health -= 0.04;
-		Misses += 1;
+		misses++;
+
+		if (isStoryMode)
+		{
+			storyScore += Math.round(songScore);
+			storyMisses += misses;
+		}
+
 		//accuracy -= 0.50;
 		if (combo > 5 && gf.animOffsets.exists('sad'))
 			{
@@ -1365,7 +1416,7 @@ class PlayState extends MusicBeatState
 		var upP = controls.UP_P;
 		var rightP = controls.RIGHT_P;
 		var downP = controls.DOWN_P;
-		var leftP = controls.LEFT_P;
+		var leftP = controls.LEFT_P;		
 
 		var gamepad = FlxG.gamepads.lastActive;
 		if (gamepad != null)
@@ -1403,9 +1454,10 @@ class PlayState extends MusicBeatState
 
 	function noteCheck(keyP:Bool, note:Note):Void
 	{
-		trace(note.noteData + ' note check here ' + keyP);
 		if (keyP)
 			goodNoteHit(note);
+		else
+			noteMiss();
 	}
 
 	function goodNoteHit(note:Note):Void
